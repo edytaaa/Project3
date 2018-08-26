@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Wspólnota</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div style="margin: auto; max-width: 400px">
+
+    <a th:href="'/wspolnota?id=' + ${mieszkanie.getWspolnota().getId()}">Powrót do listy mieszkań</a>
+
+    <h2>Mieszkanie:</h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Numer mieszkania:</th>
+            <th>Powierzchnia mieszkania:</th>
+        </tr>
+        <tr th:object="${mieszkanie}">
+            <td th:text="*{numer}">numer</td>
+            <td th:text="*{powierzchnia}">powierzchnia</td>
+        </tr>
+    </table>
+
+
+    <h2>Mieszkańcy:</h2>
+    <ul class="list-group">
+        <li class="list-group-item" th:each="mieszkaniec: ${mieszkanie.mieszkaniecList}" th:object="${mieszkaniec}">
+            <a th:href="'/mieszkaniec?id=' + ${mieszkaniec.id}" th:text="${mieszkaniec.imie} +' '+ ${mieszkaniec.nazwisko} "></a>
+        </li>
+    </ul>
+    <!--//LUB:-->
+    <!--<h2>Mieszkańcy:</h2>-->
+    <!--<ul class="list-group">-->
+        <!--<li class="list-group-item" th:each="mieszkaniec: ${mieszkancy}" >-->
+            <!--<a th:href="'/mieszkaniec?id=' + ${mieszkaniec.id}" th:text="${mieszkaniec.imie} +' '+ ${mieszkaniec.nazwisko} "></a>-->
+        <!--</li>-->
+    <!--</ul>-->
+
+
+    <h2>Dodaj nowego mieszkańca:</h2>
+    <form action="/addMieszkaniec" method="post" th:object="${newMieszkaniec}">
+        <input type="hidden" th:field="*{mieszkanie}"/>
+        <div class="form-group">
+            <label for="imie">Imie:</label>
+            <input th:field="*{imie}" type="text" class="form-control" id="imie" placeholder="Imie"/>
+        </div>
+        <div class="form-group">
+            <label for="nazwisko">Nazwisko:</label>
+            <input th:field="*{nazwisko}" type="text" class="form-control" id="nazwisko" placeholder="Nazwisko"/>
+        </div>
+        <div class="form-check">
+            <input th:field="*{plec}" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="Kobieta">
+            <label class="form-check-label" for="exampleRadios1">
+                Kobieta
+            </label>
+        </div>
+        <div class="form-check">
+            <input th:field="*{plec}" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="Mężczyzna">
+            <label class="form-check-label" for="exampleRadios2">
+                Mężczyzna
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Dodaj</button>
+    </form><br/>
+    <br/>
+
+
+    <h2>Aktualizuj mieszkanie:</h2>
+    <form method="post" action="/updateMieszkanie" th:object="${mieszkanie}">
+        <input type="hidden" th:field="*{wspolnota}"/>
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-group">
+            <label for="numer">Numer:</label>
+            <input th:field="*{numer}" type="text" class="form-control" id="numer" placeholder="Numer"/>
+        </div>
+        <div class="form-group">
+            <label for="powierzchnia">Powierzchnia:</label>
+            <input th:field="*{powierzchnia}" type="text" class="form-control" id="powierzchnia" placeholder="Powierzchnia"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Aktualizuj</button>
+    </form>
+
+
+    <h2>Usuń mieszkanie</h2>
+    <form action="/removeMieszkanie" method="post" th:object="${mieszkanie}">
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{wspolnota}"/>
+        <button type="submit" class="btn btn-primary">Usuń</button></br>
+
+        <small>UWAGA!</small></br>
+        <small>Zanim usuniesz mieszkanie upewnij się, że nie zawiera mieszkańców.</small></br>
+        <small>Jeżeli zawiera mieszkańców - najpierw usuń mieszkańców.</small></br>
+    </form>
+
+
+</div>
+</body>
+</html></html>

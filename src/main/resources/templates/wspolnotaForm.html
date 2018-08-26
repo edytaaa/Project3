@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Wspólnota</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div style="margin: auto; max-width: 400px">
+
+    <a href="/">Powrót do listy wspólnot</a>
+
+    <h2>Wspólnota:</h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Nazwa:</th>
+            <th>Adres:</th>
+        </tr>
+        <tr th:object="${wspolnota}">
+            <td th:text="*{nazwa}">nazwa</td>
+            <td th:text="*{adres}">adres</td>
+        </tr>
+    </table>
+
+
+    <h2>Mieszkania:</h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Numer mieszkania:</th>
+            <th>Powierzchnia mieszkania:</th>
+            <th>Dodatkowe informacje:</th>
+        </tr>
+        <tr th:each="mieszkanie: ${wspolnota.mieszkanieList}" th:object="${mieszkanie}">
+            <td th:text="*{numer}">7</td>
+            <td th:text="*{powierzchnia}">47</td>
+            <td><a th:href="'/mieszkanie?id=' + *{id}" th:text="'Szczegóły'">Szczegóły</a></td>
+        </tr>
+    </table>
+    <h5 th:text="'Suma powierzchni mieszkań: ' + ${sumaPowierzchni}"></h5>
+    <!--LUB:-->
+    <!--<h2>Mieszkania:</h2>-->
+    <!--<table class="table table-striped">-->
+        <!--<tr>-->
+            <!--<th>Numer mieszkania:</th>-->
+            <!--<th>Powierzchnia mieszkania:</th>-->
+            <!--<th>Dodatkowe informacje:</th>-->
+        <!--</tr>-->
+        <!--<tr th:each="mieszkanie: ${mieszkania}">-->
+            <!--<td th:text="${mieszkanie.numer}"></td>-->
+            <!--<td th:text="${mieszkanie.powierzchnia}"></td>-->
+            <!--<td><a th:href="'/mieszkanie?id=' + ${mieszkanie.id}" th:text="'Szczegóły'">Szczegóły</a></td>-->
+        <!--</tr>-->
+    <!--</table>-->
+    <!--<h5 th:text="'Suma powierzchni mieszkań: ' + ${sumaPowierzchni}"></h5>-->
+
+
+    <h2>Dodaj nowe mieszkanie:</h2>
+    <form action="/addMieszkanie" method="post" th:object="${newMieszkanie}">
+        <input type="hidden" th:field="*{wspolnota}"/>
+        <div class="form-group">
+            <label for="numer">Numer:</label>
+            <input th:field="*{numer}" type="text" class="form-control" id="numer" placeholder="Numer"/>
+        </div>
+        <div class="form-group">
+            <label for="powierzchnia">Powierzchnia:</label>
+            <input th:field="*{powierzchnia}" type="text" class="form-control" id="powierzchnia" placeholder="Powierzchnia"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Dodaj</button>
+    </form>
+
+
+    <h2>Mieszkańcy:</h2>
+    <ul class="list-group">
+        <li class="list-group-item" th:each="mieszkaniec: ${mieszkancy}">
+            <a th:href="'/mieszkaniec?id=' + ${mieszkaniec.id}" th:text="${mieszkaniec.imie} +' '+ ${mieszkaniec.nazwisko} "></a>
+        </li>
+    </ul><br/>
+    <br/>
+
+
+    <h2>Aktualizuj wspólnotę:</h2>
+    <form method="post" action="/updateWspolnota" th:object="${wspolnota}">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-group">
+            <label for="nazwa">Nazwa</label>
+            <input th:field="*{nazwa}" type="text" class="form-control" id="nazwa" placeholder="Wpisz nazwę"/>
+        </div>
+        <div class="form-group">
+            <label for="adres">Adres</label>
+            <input th:field="*{adres}" type="text" class="form-control" id="adres" placeholder="Wpisz adres"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Aktualizuj</button>
+    </form>
+
+
+    <h2>Usuń wspólnotę</h2>
+    <form action="/removeWspolnota" method="post" th:object="${wspolnota}">
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{mieszkanieList}"/>
+        <button type="submit" class="btn btn-primary">Usuń</button>
+    </form>
+
+</div>
+</body>
+</html>
